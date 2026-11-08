@@ -1,0 +1,9 @@
+FOTO PROFIL: taruh fotomu dengan nama foto-saya.jpg (disarankan persegi/1:1, wajah di tengah).
+
+Taruh foto/scan bukti kamu di folder ini dengan nama persis seperti di index.html, misalnya:
+proyek-perpus.jpg, proyek-toko.jpg, proyek-keuangan.jpg, proyek-ojek.jpg
+asisten-lab.jpg, magang.jpg, hima.jpg
+sertifikat-1.jpg ... sertifikat-4.jpg
+kegiatan-1.jpg ... kegiatan-6.jpg
+Selama file belum ada, halaman menampilkan kotak berwarna sebagai penanda.
+Tips: perkecil foto (maks. 1600 px, di bawah 500 KB) supaya halaman cepat dibuka.
