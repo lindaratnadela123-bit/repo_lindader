@@ -21,11 +21,17 @@ class MahasiswaController extends Controller
 
     public function create()
     {
-        $this->view('mahasiswa/create', ['title' => 'Tambah Mahasiswa', 'errors' => []]);
+        $this->view('mahasiswa/create', [
+            'title'     => 'Tambah Mahasiswa',
+            'errors'    => [],
+            'prodiList' => $this->prodiModel->all(),
+        ]);
     }
 
     public function store()
     {
+        $this->verifyCsrf('/mahasiswa/create');
+
         $nim   = trim($_POST['nim'] ?? '');
         $nama  = trim($_POST['nama'] ?? '');
         $prodi = trim($_POST['prodi'] ?? '');
@@ -36,7 +42,9 @@ class MahasiswaController extends Controller
         } elseif ($this->repo->find($nim) !== null) {
             $errors[] = 'NIM sudah terdaftar.';
         }
-        if ($nama === '')  { $errors[] = 'Nama wajib diisi.'; }
+        if ($nama === '') {
+            $errors[] = 'Nama wajib diisi.';
+        }
 
         $prodiRow = $prodi === '' ? null : $this->prodiModel->findByNameOrCode($prodi);
         if ($prodi === '') {
@@ -47,7 +55,11 @@ class MahasiswaController extends Controller
         }
 
         if ($errors) {
-            $this->view('mahasiswa/create', ['title' => 'Tambah Mahasiswa', 'errors' => $errors]);
+            $this->view('mahasiswa/create', [
+                'title'     => 'Tambah Mahasiswa',
+                'errors'    => $errors,
+                'prodiList' => $this->prodiModel->all(),
+            ]);
             return;
         }
 
@@ -73,16 +85,19 @@ class MahasiswaController extends Controller
         }
 
         $this->view('mahasiswa/edit', [
-            'title'  => 'Edit Mahasiswa',
-            'errors' => [],
-            'nim'    => $mhs->getNim(),
-            'nama'   => $mhs->getNama(),
-            'prodi'  => $mhs->getProdi(),
+            'title'     => 'Edit Mahasiswa',
+            'errors'    => [],
+            'prodiList' => $this->prodiModel->all(),
+            'nim'       => $mhs->getNim(),
+            'nama'      => $mhs->getNama(),
+            'prodi'     => $mhs->getProdi(),
         ]);
     }
 
     public function update()
     {
+        $this->verifyCsrf('/mahasiswa');
+
         $nim   = $_POST['nim'] ?? '';
         $nama  = trim($_POST['nama'] ?? '');
         $prodi = trim($_POST['prodi'] ?? '');
@@ -93,7 +108,9 @@ class MahasiswaController extends Controller
         }
 
         $errors = [];
-        if ($nama === '')  { $errors[] = 'Nama wajib diisi.'; }
+        if ($nama === '') {
+            $errors[] = 'Nama wajib diisi.';
+        }
 
         $prodiRow = $prodi === '' ? null : $this->prodiModel->findByNameOrCode($prodi);
         if ($prodi === '') {
@@ -105,8 +122,12 @@ class MahasiswaController extends Controller
 
         if ($errors) {
             $this->view('mahasiswa/edit', [
-                'title' => 'Edit Mahasiswa', 'errors' => $errors,
-                'nim' => $nim, 'nama' => $nama, 'prodi' => $prodi,
+                'title'     => 'Edit Mahasiswa',
+                'errors'    => $errors,
+                'prodiList' => $this->prodiModel->all(),
+                'nim'       => $nim,
+                'nama'      => $nama,
+                'prodi'     => $prodi,
             ]);
             return;
         }
@@ -118,7 +139,9 @@ class MahasiswaController extends Controller
 
     public function delete()
     {
-        $nim = $_GET['nim'] ?? '';
+        $this->verifyCsrf('/mahasiswa');
+
+        $nim = $_POST['nim'] ?? '';
 
         if ($this->repo->find($nim) === null) {
             $this->flash('danger', 'Data mahasiswa tidak ditemukan.');

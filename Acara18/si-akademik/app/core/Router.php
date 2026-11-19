@@ -6,7 +6,20 @@ class Router {
     ];
 
     public function dispatch(): void {
-        $uri = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
+        try {
+            $this->route();
+        } catch (Throwable $e) {
+            // Jaring pengaman: error tak terduga (mis. kegagalan query) tetap
+            // dijawab dengan JSON berformat seragam, bukan halaman error PHP.
+            $errors = (defined('APP_ENV') && APP_ENV === 'development')
+                ? ['server' => [$e->getMessage()]]
+                : [];
+            Response::json(500, false, 'Terjadi kesalahan pada server.', null, $errors);
+        }
+    }
+
+    private function route(): void {
+        $uri      = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
         $segments = explode('/', $uri);
         $resource = end($segments) ?: 'mahasiswa';
 

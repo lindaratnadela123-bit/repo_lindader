@@ -1,0 +1,126 @@
+{
+  "info": {
+    "name": "Acara 19 - Postman dan API Authentication",
+    "description": "Pengujian registrasi, login, JWT, autentikasi, CRUD mahasiswa, dan dokumentasi API.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. POST register",
+      "request": {
+        "method": "POST",
+        "header": [{"key":"Content-Type","value":"application/json"}],
+        "url": "{{base_url}}/register",
+        "body": {
+          "mode":"raw",
+          "raw":"{\n  \"username\":\"linda\",\n  \"email\":\"linda@example.com\",\n  \"password\":\"rahasia123\"\n}",
+          "options":{"raw":{"language":"json"}}
+        },
+        "description":"AuthController::register()"
+      },
+      "event":[{"listen":"test","script":{"type":"text/javascript","exec":["pm.test(\"Status 201 atau 409\", () => pm.expect([201,409]).to.include(pm.response.code));","const j=pm.response.json(); pm.test(\"Envelope lengkap\", () => [\"success\",\"message\",\"data\",\"errors\",\"timestamp\"].forEach(k=>pm.expect(j).to.have.property(k)));"]}}]
+    },
+    {
+      "name": "2. POST register email salah",
+      "request": {
+        "method":"POST",
+        "header":[{"key":"Content-Type","value":"application/json"}],
+        "url":"{{base_url}}/register",
+        "body":{"mode":"raw","raw":"{\n  \"username\":\"email-salah\",\n  \"email\":\"bukan-email\",\n  \"password\":\"rahasia123\"\n}","options":{"raw":{"language":"json"}}},
+        "description":"Pengujian validasi format email pada tugas mandiri."
+      },
+      "event":[{"listen":"test","script":{"type":"text/javascript","exec":["pm.test(\"Status 422\", () => pm.response.to.have.status(422));"]}}]
+    },
+    {
+      "name": "3. POST login",
+      "request": {
+        "method":"POST",
+        "header":[{"key":"Content-Type","value":"application/json"}],
+        "url":"{{base_url}}/login",
+        "body":{"mode":"raw","raw":"{\n  \"username\":\"linda\",\n  \"password\":\"rahasia123\"\n}","options":{"raw":{"language":"json"}}},
+        "description":"AuthController::login() menghasilkan JWT."
+      },
+      "event":[{"listen":"test","script":{"type":"text/javascript","exec":["pm.test(\"Status 200\", () => pm.response.to.have.status(200));","const j=pm.response.json(); pm.collectionVariables.set(\"token\", j.data.token); pm.test(\"Token tersimpan\", () => pm.expect(j.data.token).to.be.a(\"string\"));"]}}]
+    },
+    {
+      "name": "4. POST login salah",
+      "request": {
+        "method":"POST",
+        "header":[{"key":"Content-Type","value":"application/json"}],
+        "url":"{{base_url}}/login",
+        "body":{"mode":"raw","raw":"{\n  \"username\":\"linda\",\n  \"password\":\"password-salah\"\n}","options":{"raw":{"language":"json"}}},
+        "description":"Pengujian kredensial salah."
+      },
+      "event":[{"listen":"test","script":{"type":"text/javascript","exec":["pm.test(\"Status 401\", () => pm.response.to.have.status(401));"]}}]
+    },
+    {
+      "name": "5. GET mahasiswa (publik)",
+      "request":{
+        "method":"GET",
+        "url":"{{base_url}}/mahasiswa",
+        "description":"MahasiswaController::index(), tidak memerlukan autentikasi."
+      },
+      "event":[{"listen":"test","script":{"type":"text/javascript","exec":["pm.test(\"Status 200\", () => pm.response.to.have.status(200));","pm.test(\"Data array\", () => pm.expect(pm.response.json().data).to.be.an(\"array\"));"]}}]
+    },
+    {
+      "name": "6. POST mahasiswa tanpa token",
+      "request":{
+        "method":"POST",
+        "header":[{"key":"Content-Type","value":"application/json"}],
+        "url":"{{base_url}}/mahasiswa",
+        "body":{"mode":"raw","raw":"{\n  \"nim\":\"240101019\",\n  \"nama\":\"Mahasiswa Acara 19\",\n  \"prodi\":\"Teknik Informatika\"\n}","options":{"raw":{"language":"json"}}},
+        "description":"MahasiswaController::store() harus menolak request tanpa token."
+      },
+      "event":[{"listen":"test","script":{"type":"text/javascript","exec":["pm.test(\"Status 401\", () => pm.response.to.have.status(401));"]}}]
+    },
+    {
+      "name": "7. POST mahasiswa token palsu",
+      "request":{
+        "method":"POST",
+        "header":[{"key":"Content-Type","value":"application/json"},{"key":"Authorization","value":"Bearer token-palsu"}],
+        "url":"{{base_url}}/mahasiswa",
+        "body":{"mode":"raw","raw":"{\n  \"nim\":\"240101019\",\n  \"nama\":\"Mahasiswa Acara 19\",\n  \"prodi\":\"Teknik Informatika\"\n}","options":{"raw":{"language":"json"}}},
+        "description":"Pengujian token tidak valid."
+      },
+      "event":[{"listen":"test","script":{"type":"text/javascript","exec":["pm.test(\"Status 401\", () => pm.response.to.have.status(401));"]}}]
+    },
+    {
+      "name": "8. POST mahasiswa token valid",
+      "request":{
+        "method":"POST",
+        "header":[{"key":"Content-Type","value":"application/json"},{"key":"Authorization","value":"Bearer {{token}}"}],
+        "url":"{{base_url}}/mahasiswa",
+        "body":{"mode":"raw","raw":"{\n  \"nim\":\"240101019\",\n  \"nama\":\"Mahasiswa Acara 19\",\n  \"prodi\":\"Teknik Informatika\"\n}","options":{"raw":{"language":"json"}}},
+        "description":"MahasiswaController::store() setelah Auth::requireAuth()."
+      },
+      "event":[{"listen":"test","script":{"type":"text/javascript","exec":["pm.test(\"Status 201\", () => pm.response.to.have.status(201));","const j=pm.response.json(); pm.collectionVariables.set(\"new_id\", j.data.id);"]}}]
+    },
+    {
+      "name": "9. PUT mahasiswa token valid",
+      "request":{
+        "method":"PUT",
+        "header":[{"key":"Content-Type","value":"application/json"},{"key":"Authorization","value":"Bearer {{token}}"}],
+        "url":"{{base_url}}/mahasiswa?id={{new_id}}",
+        "body":{"mode":"raw","raw":"{\n  \"nim\":\"240101019\",\n  \"nama\":\"Mahasiswa Acara 19 Diperbarui\",\n  \"prodi\":\"Sistem Informasi\"\n}","options":{"raw":{"language":"json"}}},
+        "description":"MahasiswaController::update() setelah autentikasi."
+      },
+      "event":[{"listen":"test","script":{"type":"text/javascript","exec":["pm.test(\"Status 200\", () => pm.response.to.have.status(200));"]}}]
+    },
+    {
+      "name": "10. DELETE mahasiswa token valid",
+      "request":{
+        "method":"DELETE",
+        "header":[{"key":"Authorization","value":"Bearer {{token}}"}],
+        "url":"{{base_url}}/mahasiswa?id={{new_id}}",
+        "description":"MahasiswaController::destroy() setelah autentikasi."
+      },
+      "event":[{"listen":"test","script":{"type":"text/javascript","exec":["pm.test(\"Status 200\", () => pm.response.to.have.status(200));"]}}]
+    }
+  ],
+  "variable":[
+    {"key":"base_url","value":"http://localhost/bkpm/Acara19/si-akademik/public"},
+    {"key":"token","value":""},
+    {"key":"new_id","value":""}
+  ],
+  "event":[{"listen":"test","script":{"type":"text/javascript","exec":["pm.test(\"Content-Type application/json\", () => pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\"));","const j=pm.response.json(); pm.test(\"Envelope lengkap\", () => [\"success\",\"message\",\"data\",\"errors\",\"timestamp\"].forEach(k=>pm.expect(j).to.have.property(k)));"]}}]
+}

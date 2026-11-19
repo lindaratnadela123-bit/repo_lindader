@@ -18,6 +18,7 @@
                 <?php endif; ?>
 
                 <form method="POST" action="<?= BASE_URL ?>/mahasiswa">
+                    <?= csrf_field() ?>
 
                     <div class="mb-3">
                         <label for="nim" class="form-label">NIM</label>
@@ -35,9 +36,15 @@
 
                     <div class="mb-3">
                         <label for="prodi" class="form-label">Program Studi</label>
-                        <input type="text" id="prodi" name="prodi" class="form-control"
-                            placeholder="Masukkan program studi"
-                            value="<?= htmlspecialchars($_POST['prodi'] ?? '') ?>" required>
+                        <select id="prodi" name="prodi" class="form-select" required>
+                            <option value="">-- Pilih program studi --</option>
+                            <?php foreach ($prodiList as $p): ?>
+                                <option value="<?= htmlspecialchars($p['nama']) ?>"
+                                    <?= (($_POST['prodi'] ?? '') === $p['nama']) ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($p['nama']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
 
                     <div class="d-flex flex-column flex-sm-row gap-2">

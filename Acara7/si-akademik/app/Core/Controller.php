@@ -25,6 +25,18 @@ abstract class Controller
         exit;
     }
 
+    // Cek token CSRF dari form POST; jika tidak cocok, kembali ke halaman $backTo
+    protected function verifyCsrf(string $backTo): void
+    {
+        $sent  = $_POST['_token'] ?? '';
+        $saved = $_SESSION['_token'] ?? '';
+
+        if ($saved === '' || !hash_equals($saved, $sent)) {
+            $this->flash('danger', 'Sesi form tidak valid. Silakan coba lagi.');
+            $this->redirect($backTo);
+        }
+    }
+
     protected function flash(string $type, string $message): void
     {
         $_SESSION['flash'] = ['type' => $type, 'message' => $message];

@@ -16,7 +16,24 @@ class Mahasiswa {
         return $stmt->fetch();
     }
 
+    // Cek apakah NIM sudah dipakai. $exceptId dipakai saat update
+    // agar data milik sendiri tidak dianggap duplikat.
+    public function nimExists(string $nim, ?int $exceptId = null): bool {
+        $sql = 'SELECT COUNT(*) FROM mahasiswa WHERE nim = :nim';
+        $params = [':nim' => $nim];
+        if ($exceptId !== null) {
+            $sql .= ' AND id <> :id';
+            $params[':id'] = $exceptId;
+        }
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+        return (int) $stmt->fetchColumn() > 0;
+    }
+
     public function create(array $data): string {
+        if ($this->nimExists($data['nim'])) {
+            throw new DomainException('NIM sudah terdaftar');
+        }
         $stmt = $this->db->prepare(
             'INSERT INTO mahasiswa (nim, nama, prodi) VALUES (:nim, :nama, :prodi)'
         );
@@ -25,6 +42,9 @@ class Mahasiswa {
     }
 
     public function update(int $id, array $data): void {
+        if ($this->nimExists($data['nim'], $id)) {
+            throw new DomainException('NIM sudah terdaftar');
+        }
         $stmt = $this->db->prepare(
             'UPDATE mahasiswa SET nim = :nim, nama = :nama, prodi = :prodi WHERE id = :id'
         );

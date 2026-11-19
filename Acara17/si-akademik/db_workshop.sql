@@ -1,7 +1,7 @@
-CREATE DATABASE IF NOT EXISTS db_workshop;
-USE db_workshop;
+CREATE DATABASE IF NOT EXISTS `si-akademik`;
+USE `si-akademik`;
 
-CREATE TABLE mahasiswa (
+CREATE TABLE IF NOT EXISTS mahasiswa (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nim VARCHAR(15) NOT NULL,
     nama VARCHAR(100) NOT NULL,
@@ -10,6 +10,10 @@ CREATE TABLE mahasiswa (
 );
 
 -- Data contoh (opsional, untuk pengujian)
-INSERT INTO mahasiswa (nim, nama, prodi) VALUES
-('2024001', 'Budi Santoso', 'Teknik Informatika'),
-('2024002', 'Siti Aminah', 'Sistem Informasi');
+INSERT INTO mahasiswa (nim, nama, prodi)
+SELECT '2024001', 'Budi Santoso', 'Teknik Informatika'
+WHERE NOT EXISTS (SELECT 1 FROM mahasiswa WHERE nim = '2024001');
+
+INSERT INTO mahasiswa (nim, nama, prodi)
+SELECT '2024002', 'Siti Aminah', 'Sistem Informasi'
+WHERE NOT EXISTS (SELECT 1 FROM mahasiswa WHERE nim = '2024002');

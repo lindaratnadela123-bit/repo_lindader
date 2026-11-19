@@ -56,7 +56,7 @@ class MahasiswaRepository extends BaseRepository
     public function create(Mahasiswa $m): void
     {
         $stmt = $this->pdo->prepare(
-            "INSERT INTO mahasiswa_x (nim, nama, email, prodi_id, angkatan, status)
+            "INSERT INTO mahasiswa (nim, nama, email, prodi_id, angkatan, status)
              VALUES (:nim, :nama, :email, :prodi_id, :angkatan, :status)"
         );
         $stmt->execute([

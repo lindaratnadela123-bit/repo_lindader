@@ -4,7 +4,7 @@
 // Akan dipindahkan ke Controller di pertemuan berikutnya.
 
 require_once __DIR__ . '/../app/Models/Mahasiswa.php';
-
+$base = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])), '/');
 $halaman = $_GET['halaman'] ?? 'index';
 
 if ($halaman === 'create') {

@@ -3,6 +3,7 @@ class Router {
     // Peta sederhana: nama resource pada URL => nama class Controller
     private array $map = [
         'mahasiswa' => 'MahasiswaController',
+        'buku'      => 'BukuController',
     ];
 
     public function dispatch(): void {

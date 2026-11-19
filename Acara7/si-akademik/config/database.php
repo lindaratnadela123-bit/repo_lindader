@@ -1,9 +1,8 @@
 <?php
 
-// Langkah 4: konfigurasi koneksi MySQL (phpMyAdmin / XAMPP default)
 return [
     'host'     => 'localhost',
-    'database' => 'si_akademik',
+    'database' => 'codescracker',
     'username' => 'root',
     'password' => '',
     'charset'  => 'utf8mb4',

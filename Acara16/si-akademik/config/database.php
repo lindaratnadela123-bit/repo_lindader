@@ -1,14 +1,21 @@
 <?php
+
 function getConnection(): PDO
 {
     $host = 'localhost';
-    $db   = 'si_akademik';
+    $db   = 'codescracker';
     $user = 'root';
     $pass = '';
 
-    $pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8mb4", $user, $pass, [
-        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    ]);
+    $pdo = new PDO(
+        "mysql:host=$host;dbname=$db;charset=utf8mb4",
+        $user,
+        $pass,
+        [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        ]
+    );
+
     return $pdo;
 }

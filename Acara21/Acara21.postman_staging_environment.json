@@ -1,0 +1,12 @@
+{
+  "id": "acara21-staging",
+  "name": "Acara21 Staging",
+  "values": [
+    {
+      "key": "base_url",
+      "value": "http://staging.local/bkpm/Acara21/si-akademik/public",
+      "enabled": true
+    }
+  ],
+  "_postman_variable_scope": "environment"
+}

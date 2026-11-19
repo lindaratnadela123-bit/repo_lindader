@@ -1,0 +1,9 @@
+{
+  "id":"acara19-staging",
+  "name":"Acara19 Staging",
+  "values":[
+    {"key":"base_url","value":"http://staging.local/bkpm/Acara19/si-akademik/public","enabled":true},
+    {"key":"token","value":"","enabled":true}
+  ],
+  "_postman_variable_scope":"environment"
+}

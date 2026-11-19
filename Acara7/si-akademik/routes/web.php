@@ -19,7 +19,6 @@ $routes = [
         '/mahasiswa'         => ['MahasiswaController', 'index', 'auth'],
         '/mahasiswa/create'  => ['MahasiswaController', 'create', 'auth'],
         '/mahasiswa/edit'    => ['MahasiswaController', 'edit', 'auth'],
-        '/mahasiswa/delete'  => ['MahasiswaController', 'delete', 'auth'],
         '/mahasiswa/{id}'    => ['MahasiswaController', 'show', 'auth'],
     ],
 
@@ -29,6 +28,7 @@ $routes = [
         // Mahasiswa (wajib login)
         '/mahasiswa'         => ['MahasiswaController', 'store', 'auth'],
         '/mahasiswa/update'  => ['MahasiswaController', 'update', 'auth'],
+        '/mahasiswa/delete'  => ['MahasiswaController', 'delete', 'auth'],
     ],
 ];
 

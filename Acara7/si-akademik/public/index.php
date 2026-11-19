@@ -7,6 +7,15 @@ session_start();
 define('ROOT_PATH', dirname(__DIR__));
 define('APP_PATH', ROOT_PATH . '/app');
 
+// Helper CSRF: dipanggil di dalam setiap form POST
+function csrf_field(): string
+{
+    if (empty($_SESSION['_token'])) {
+        $_SESSION['_token'] = bin2hex(random_bytes(32));
+    }
+    return '<input type="hidden" name="_token" value="' . htmlspecialchars($_SESSION['_token']) . '">';
+}
+
 // Autoloader sederhana (tanpa Composer)
 spl_autoload_register(function (string $class) {
     foreach (['Core', 'Controllers', 'Models', 'Middleware', 'Services', 'Repositories'] as $dir) {
@@ -31,6 +40,6 @@ if ($base !== '' && str_starts_with($uri, $base)) {
 
 define('BASE_URL', $base);   // contoh: /si-akademik/public
 
-$uri = '/' . trim($uri, '/');   // "" menjadi "/", "/mahasiswa/" menjadi "/mahasiswa"
+$uri = '/' . trim($uri, '/');   // string kosong menjadi "/", "/mahasiswa/" menjadi "/mahasiswa"
 
 (new Router($routes))->dispatch($uri, $_SERVER['REQUEST_METHOD']);

@@ -1,0 +1,634 @@
+{
+  "info": {
+    "name": "Acara 18 - JSON Encoding & HTTP Status Code",
+    "description": "Pengujian Response::json() (envelope seragam) dan taksonomi kode status HTTP. Jalankan folder berurutan (Collection Runner): 'Sukses' lalu 'Error'.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "event": [
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.test(\"Content-Type application/json\", () => pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\"));",
+          "pm.test(\"Envelope seragam (success, message, data, errors, timestamp)\", () => {",
+          "  const j = pm.response.json();",
+          "  [\"success\", \"message\", \"data\", \"errors\", \"timestamp\"].forEach(k => pm.expect(j).to.have.property(k));",
+          "  pm.expect(j.success).to.eql(pm.response.code < 400);",
+          "});"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "Sukses (2xx)",
+      "item": [
+        {
+          "name": "1. POST tambah mahasiswa (201)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", () => pm.response.to.have.status(201));",
+                  "const j = pm.response.json();",
+                  "pm.test(\"success true & ada id\", () => { pm.expect(j.success).to.be.true; pm.expect(j.data.id).to.exist; });",
+                  "pm.collectionVariables.set(\"new_id\", j.data.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/mahasiswa",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "mahasiswa"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nim\": \"240101003\",\n  \"nama\": \"Andi Saputra\",\n  \"prodi\": \"Teknik Informatika\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "2. GET semua mahasiswa (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"data berupa array\", () => pm.expect(pm.response.json().data).to.be.an(\"array\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/mahasiswa",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "mahasiswa"
+              ]
+            }
+          }
+        },
+        {
+          "name": "3. GET mahasiswa by id (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"nama sesuai\", () => pm.expect(pm.response.json().data.nama).to.eql(\"Andi Saputra\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/mahasiswa?id={{new_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "mahasiswa"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "{{new_id}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "4. PUT ubah mahasiswa (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"success true\", () => pm.expect(pm.response.json().success).to.be.true);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/mahasiswa?id={{new_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "mahasiswa"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "{{new_id}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nim\": \"240101003\",\n  \"nama\": \"Andi Saputra Wijaya\",\n  \"prodi\": \"Sistem Informasi\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "5. DELETE mahasiswa (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/mahasiswa?id={{new_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "mahasiswa"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "{{new_id}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "6. GET setelah dihapus (404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", () => pm.response.to.have.status(404));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/mahasiswa?id={{new_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "mahasiswa"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "{{new_id}}"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Error (4xx)",
+      "item": [
+        {
+          "name": "400 - field wajib kosong",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"errors memuat field: nim, nama\", () => { const e = pm.response.json().errors; pm.expect(e).to.have.property(\"nim\"); pm.expect(e).to.have.property(\"nama\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/mahasiswa",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "mahasiswa"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nim\": \"\",\n  \"prodi\": \"Teknik Informatika\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "400 - body bukan JSON",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/mahasiswa",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "mahasiswa"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "ini bukan json",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "400 - id bukan angka",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/mahasiswa?id=abc",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "mahasiswa"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "abc"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "400 - PUT tanpa id",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/mahasiswa",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "mahasiswa"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nim\": \"240101003\",\n  \"nama\": \"X\",\n  \"prodi\": \"TI\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "422 - NIM bukan 9 digit",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 422\", () => pm.response.to.have.status(422));",
+                  "pm.test(\"errors memuat field: nim\", () => { const e = pm.response.json().errors; pm.expect(e).to.have.property(\"nim\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/mahasiswa",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "mahasiswa"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nim\": \"12345\",\n  \"nama\": \"Uji NIM Salah\",\n  \"prodi\": \"Teknik Informatika\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "422 - banyak field salah sekaligus",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 422\", () => pm.response.to.have.status(422));",
+                  "pm.test(\"errors memuat field: nim, nama, prodi\", () => { const e = pm.response.json().errors; pm.expect(e).to.have.property(\"nim\"); pm.expect(e).to.have.property(\"nama\"); pm.expect(e).to.have.property(\"prodi\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/mahasiswa",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "mahasiswa"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nim\": \"12345\",\n  \"nama\": 123,\n  \"prodi\": [\n    \"TI\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "404 - id tidak ditemukan",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", () => pm.response.to.have.status(404));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/mahasiswa?id=999999",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "mahasiswa"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "999999"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "404 - endpoint tidak ditemukan",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", () => pm.response.to.have.status(404));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/produk",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "produk"
+              ]
+            }
+          }
+        },
+        {
+          "name": "405 - method PATCH",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 405\", () => pm.response.to.have.status(405));",
+                  "pm.test(\"header Allow ada\", () => pm.response.to.have.header(\"Allow\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/mahasiswa",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "mahasiswa"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost/bkpm/Acara18/si-akademik/public"
+    },
+    {
+      "key": "new_id",
+      "value": ""
+    }
+  ]
+}

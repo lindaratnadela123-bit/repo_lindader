@@ -17,7 +17,7 @@
                     </div>
                 <?php endif; ?>
 
-                <form method="POST" action="/si-akademik/public/mahasiswa">
+                <form method="POST" action="<?= $base ?>/mahasiswa">
 
                     <div class="mb-3">
                         <label for="nim" class="form-label">NIM</label>
@@ -42,7 +42,7 @@
 
                     <div class="d-flex flex-column flex-sm-row gap-2">
                         <button type="submit" class="btn btn-success">Simpan</button>
-                        <a href="/si-akademik/public/" class="btn btn-secondary">Kembali</a>
+                        <a href="<?= $base ?>/" class="btn btn-secondary">Kembali</a>
                     </div>
 
                 </form>

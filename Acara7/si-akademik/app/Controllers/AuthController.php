@@ -16,6 +16,8 @@ class AuthController extends Controller
     // Memproses login (sementara: username/password di-hardcode)
     public function login()
     {
+        $this->verifyCsrf('/login');
+
         $username = $_POST['username'] ?? '';
         $password = $_POST['password'] ?? '';
 

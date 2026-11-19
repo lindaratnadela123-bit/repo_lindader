@@ -3,9 +3,9 @@
 
         <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2 mb-4">
             <h2 class="card-title mb-0">Data Mahasiswa</h2>
-            <a href="/si-akademik/public/?halaman=create" class="btn btn-success">
-                + Tambah Mahasiswa
-            </a>
+           <a href="<?= $base ?>/?halaman=create">
+           Tambah Mahasiswa
+           </a>
         </div>
 
         <div class="table-responsive">
@@ -29,11 +29,12 @@
                                 <td><?= htmlspecialchars($mhs->getProdi()) ?></td>
                                 <td><?= htmlspecialchars($mhs->getAngkatan()) ?></td>
                                 <td>
-                                    <a href="/si-akademik/public/mahasiswa/edit?nim=<?= urlencode($mhs->getNim()) ?>"
-                                        class="btn btn-warning btn-sm">Edit</a>
-                                    <a href="/si-akademik/public/mahasiswa/delete?nim=<?= urlencode($mhs->getNim()) ?>"
-                                        class="btn btn-danger btn-sm"
-                                        onclick="return confirm('Hapus data ini?');">Hapus</a>
+                                   <a href="<?= $base ?>/mahasiswa/edit?nim=<?= urlencode($mhs->getNim()) ?>">
+                                    Edit
+                                    </a>
+                                   <a href="<?= $base ?>/mahasiswa/delete?nim=<?= urlencode($mhs->getNim()) ?>">
+                                   Hapus
+                                  </a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

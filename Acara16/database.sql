@@ -1,7 +1,12 @@
-CREATE DATABASE IF NOT EXISTS si_akademik CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE si_akademik;
+CREATE DATABASE IF NOT EXISTS codescracker
+CHARACTER SET utf8mb4
+COLLATE utf8mb4_general_ci;
 
-CREATE TABLE IF NOT EXISTS mahasiswa (
+USE codescracker;
+
+DROP TABLE IF EXISTS mahasiswa;
+
+CREATE TABLE mahasiswa (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nim VARCHAR(20) NOT NULL UNIQUE,
     nama VARCHAR(100) NOT NULL,

@@ -7,6 +7,22 @@
     {
       "key": "base_url",
       "value": "http://localhost/BKPM/Acara17/si-akademik/public"
+    },
+    {
+      "key": "mahasiswa_id",
+      "value": ""
+    },
+    {
+      "key": "nim_uji",
+      "value": ""
+    },
+    {
+      "key": "buku_id",
+      "value": ""
+    },
+    {
+      "key": "judul_buku_uji",
+      "value": ""
     }
   ],
   "item": [
@@ -104,16 +120,26 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nim\": \"2024003\",\n  \"nama\": \"Dewi Lestari\",\n  \"prodi\": \"Sistem Informasi\"\n}"
+              "raw": "{\n  \"nim\": \"{{nim_uji}}\",\n  \"nama\": \"Dewi Lestari\",\n  \"prodi\": \"Sistem Informasi\"\n}"
             }
           },
           "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('nim_uji', 'U' + Date.now().toString());"
+                ]
+              }
+            },
             {
               "listen": "test",
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "pm.test('Status 201', function(){ pm.response.to.have.status(201); });"
+                  "pm.test('Status 201', function(){ pm.response.to.have.status(201); });",
+                  "pm.collectionVariables.set('mahasiswa_id', pm.response.json().data.id);"
                 ]
               }
             }
@@ -162,7 +188,7 @@
           ]
         },
         {
-          "name": "DELETE mahasiswa (ganti id sesuai hasil POST)",
+          "name": "DELETE mahasiswa hasil POST",
           "request": {
             "method": "DELETE",
             "header": [
@@ -172,7 +198,7 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/mahasiswa?id=3",
+              "raw": "{{base_url}}/mahasiswa?id={{mahasiswa_id}}",
               "host": [
                 "{{base_url}}"
               ],
@@ -182,7 +208,7 @@
               "query": [
                 {
                   "key": "id",
-                  "value": "3"
+                  "value": "{{mahasiswa_id}}"
                 }
               ]
             }
@@ -373,6 +399,364 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('Status 405', function(){ pm.response.to.have.status(405); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Tugas Mandiri - Buku",
+      "item": [
+        {
+          "name": "GET semua buku",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/buku",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "buku"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', function(){ pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET buku ID 1",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/buku?id=1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "buku"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', function(){ pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST tambah buku",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/buku",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "buku"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"judul\": \"{{judul_buku_uji}}\",\n  \"penulis\": \"Budi\",\n  \"penerbit\": \"Erlangga\",\n  \"tahun_terbit\": 2023\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('judul_buku_uji', 'Jaringan Komputer ' + Date.now().toString());"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 201', function(){ pm.response.to.have.status(201); });",
+                  "pm.collectionVariables.set('buku_id', pm.response.json().data.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PUT ubah buku hasil POST",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/buku?id={{buku_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "buku"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "{{buku_id}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"judul\": \"Jaringan Komputer Edisi 2\",\n  \"penulis\": \"Budi\",\n  \"penerbit\": \"Erlangga\",\n  \"tahun_terbit\": 2023\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', function(){ pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DELETE buku hasil POST",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/buku?id={{buku_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "buku"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "{{buku_id}}"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', function(){ pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET buku ID tidak ada",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/buku?id=999",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "buku"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "999"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 404', function(){ pm.response.to.have.status(404); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST buku data tidak lengkap",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/buku",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "buku"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"judul\": \"Tanpa Penulis\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 400', function(){ pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Tugas Mandiri - NIM Duplikat",
+      "item": [
+        {
+          "name": "POST mahasiswa NIM duplikat (409)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/mahasiswa",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "mahasiswa"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nim\": \"2024002\",\n  \"nama\": \"Penyusup\",\n  \"prodi\": \"Teknik Informatika\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 409', function(){ pm.response.to.have.status(409); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PUT mahasiswa ID 1 pakai NIM milik orang lain (409)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/mahasiswa?id=1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "mahasiswa"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nim\": \"2024002\",\n  \"nama\": \"Budi\",\n  \"prodi\": \"Teknik Informatika\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 409', function(){ pm.response.to.have.status(409); });"
                 ]
               }
             }

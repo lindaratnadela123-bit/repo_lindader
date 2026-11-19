@@ -31,9 +31,13 @@
                                 <td>
                                     <a href="<?= BASE_URL ?>/mahasiswa/edit?nim=<?= urlencode($mhs->getNim()) ?>"
                                         class="btn btn-warning btn-sm">Edit</a>
-                                    <a href="<?= BASE_URL ?>/mahasiswa/delete?nim=<?= urlencode($mhs->getNim()) ?>"
-                                        class="btn btn-danger btn-sm"
-                                        onclick="return confirm('Hapus data ini?');">Hapus</a>
+
+                                    <form method="POST" action="<?= BASE_URL ?>/mahasiswa/delete" class="d-inline"
+                                        onsubmit="return confirm('Hapus data ini?');">
+                                        <?= csrf_field() ?>
+                                        <input type="hidden" name="nim" value="<?= htmlspecialchars($mhs->getNim()) ?>">
+                                        <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                    </form>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

@@ -14,6 +14,7 @@
                 <?php require __DIR__ . '/../partials/flash.php'; ?>
 
                 <form method="POST" action="<?= BASE_URL ?>/login">
+                    <?= csrf_field() ?>
 
                     <div class="mb-3">
                         <label for="username" class="form-label">Username</label>
