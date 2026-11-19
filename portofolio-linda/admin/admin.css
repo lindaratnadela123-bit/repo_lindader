@@ -1,0 +1,23 @@
+body.admin{overflow:auto}
+.wrap{max-width:1000px;margin:0 auto;padding:40px clamp(16px,5vw,40px) 80px;position:relative;z-index:1}
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:24px}
+.top h1{margin:0;font-size:2rem}
+.panel{background:var(--surface);border-radius:20px;padding:24px;overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th,td{text-align:left;padding:12px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+th{color:var(--muted);font-weight:500}
+.th{width:64px;height:48px;border-radius:8px;object-fit:cover;display:grid;place-items:center;background:linear-gradient(135deg,var(--violet),var(--pink));font-size:1.4rem}
+.act{display:flex;gap:8px;flex-wrap:wrap}.act form{margin:0}
+.sm{display:inline-block;padding:6px 16px;border-radius:999px;border:2px solid var(--aqua);background:transparent;color:var(--aqua);font:700 .9rem "Outfit",sans-serif;cursor:pointer;text-decoration:none}
+.sm:hover{background:var(--aqua);color:var(--bg)}
+.sm.danger{border-color:var(--coral);color:var(--coral)}.sm.danger:hover{background:var(--coral);color:#fff}
+.flash,.error{padding:12px 16px;border-radius:12px;margin-bottom:18px;border:1px solid var(--aqua);background:rgba(46,230,214,.12)}
+.error{border-color:var(--coral);background:rgba(255,107,107,.14)}.error p{margin:0}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.fgrid .full{grid-column:1/-1}
+.form{max-width:none}
+.form select,.form input[type=file]{padding:12px 14px;border-radius:14px;border:2px solid var(--line);background:var(--bg);color:var(--ink);font:inherit}
+.form input,.form textarea{background:var(--bg)}
+.hint{color:var(--muted);font-size:.9rem;font-weight:400}
+.preview{max-width:220px;border-radius:12px}
+.login{max-width:420px;margin:8vh auto 0}
+@media(max-width:700px){.fgrid{grid-template-columns:1fr}}

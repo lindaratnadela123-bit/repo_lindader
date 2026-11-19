@@ -1,0 +1,14 @@
+PANDUAN UNGGAH PORTOFOLIO KE INFINITYFREE
+
+Situs ini memakai PHP dan MySQL. GitHub Pages tidak menjalankan PHP; repo GitHub menjadi salinan kode, sedangkan situs publik dijalankan dari hosting.
+
+1. Buat domain/subdomain di panel InfinityFree dan siapkan akun hosting.
+2. Dari panel, buat database MySQL. Catat host MySQL, nama database, username, dan password yang diberikan panel. Jangan masukkan kredensial ini ke GitHub.
+3. Buka phpMyAdmin untuk database tersebut dan impor database-infinityfree.sql.
+4. Buka config.php yang disertakan dalam paket. Isi DB_HOST, DB_NAME, DB_USER, dan DB_PASS sesuai panel.
+5. Untuk mengaktifkan halaman admin, isi ADMIN_USER dan ADMIN_PASS dengan nilai baru yang kuat. Jika dibiarkan kosong, login admin tetap dinonaktifkan.
+6. Unggah file situs ke folder htdocs melalui File Manager. Jangan unggah folder .git. Pastikan .htaccess di folder utama dan uploads ikut terunggah.
+7. Hapus database-infinityfree.sql dan config.example.php dari folder htdocs setelah konfigurasi selesai. config.php perlu tetap ada; akses langsung ke file itu diblokir oleh .htaccess.
+8. Buka domain/subdomain Anda untuk memeriksa situs. Tautan sertifikat tetap membuka PDF dan video proyek tetap berada di folder uploads.
+
+File config.php dan kredensial lokal Laragon tidak disertakan dalam repo GitHub maupun paket unggah.
