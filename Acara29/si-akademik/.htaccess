@@ -1,0 +1,4 @@
+Options -Indexes
+RewriteEngine On
+RewriteRule ^(app|migrations|backups)(/|$) - [F,NC,L]
+RewriteRule ^db_workshop\.sql$ - [F,L]
